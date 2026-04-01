@@ -41,6 +41,9 @@ export default function Footer() {
       </div>
       <div style={{ borderTop: "1px solid var(--border)", marginTop: "4rem", paddingTop: "2rem", textAlign: "center", fontSize: "0.75rem", color: "var(--text-muted)" }}>
         © {new Date().getFullYear()} PG Life. Designed for the high-end experience.
+        <div style={{ marginTop: "0.5rem", opacity: 0.8, fontStyle: "italic" }}>
+          this project is developed by yalla lakshmi charan teja from jntu mahabubabad.
+        </div>
       </div>
     </footer>
   );
