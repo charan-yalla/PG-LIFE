@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f5f5f7;
+  --bg-tertiary: #fafafc;
+  --card: #ffffff;
+  --border: #d2d2d780;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --text: #1d1d1f;
+  --text-muted: #86868b;
+  --radius: 12px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; }
+a { color: inherit; text-decoration: none; transition: opacity 0.2s; }
+a:hover { opacity: 0.8; }
+button { font-family: inherit; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+.navbar {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 52px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; }
+.nav-links { display: flex; align-items: center; gap: 1.25rem; }
+.nav-btn {
+  padding: 0.35rem 0.75rem; border-radius: 8px; font-size: 0.75rem; font-weight: 500;
+  border: none; background: transparent; color: var(--text);
+}
+.nav-btn.primary {
+  background: var(--accent); color: white;
+  padding: 0.35rem 0.85rem;
+}
+.nav-btn.primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+.hero {
+  padding: 6rem 1.5rem; text-align: center; background: var(--bg);
+  position: relative; overflow: hidden;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; line-height: 1.05;
+  margin-bottom: 1.5rem; letter-spacing: -0.03em;
+}
+.hero p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 600px; margin-inline: auto; }
+
+.search-bar {
+  display: flex; gap: 0; max-width: 480px; margin: 0 auto;
+  background: var(--bg-secondary); border-radius: 12px; overflow: hidden;
+  border: 1px solid transparent; transition: border-color 0.3s;
+}
+.search-bar:focus-within { border-color: var(--accent); background: white; box-shadow: 0 0 0 4px rgba(0,113,227,0.1); }
+.search-bar input {
+  flex: 1; padding: 0.85rem 1.25rem; background: transparent;
+  border: none; outline: none; font-size: 0.95rem; font-weight: 400;
+}
+.search-bar button {
+  padding: 0 1.5rem; background: var(--accent); color: white;
+  border: none; font-weight: 600; font-size: 0.85rem;
+}
+
+/* ── Cities Grid ────────────────────────────────────────────────────────── */
+.section { padding: 4rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+.section-title { font-size: 1.8rem; margin-bottom: 2.5rem; }
+.cities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+.city-card {
+  position: relative; border-radius: 18px; overflow: hidden;
+  background: var(--bg-secondary); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  aspect-ratio: 4/5;
+}
+.city-card:hover { transform: scale(1.02); box-shadow: var(--shadow-lg); }
+.city-card img { width: 100%; height: 100%; object-fit: cover; }
+.city-card-label {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1.5rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.4));
+  color: white; font-weight: 700; font-size: 1.25rem;
+}
+
+/* ── Property List & Cards ──────────────────────────────────────────────── */
+.page-header { background: var(--bg-secondary); padding: 3rem 1.5rem; }
+.breadcrumb { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.page-title { font-size: 2.25rem; font-weight: 800; }
+
+.filter-bar {
+  display: flex; gap: 0.75rem; align-items: center; padding: 0.75rem 1.5rem;
+  background: white; border-bottom: 1px solid var(--border); overflow-x: auto;
+}
+.filter-btn {
+  padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+  background: var(--bg-secondary); color: var(--text); border: none;
+}
+.filter-btn.active { background: var(--accent); color: white; }
+
+.properties-container { max-width: 800px; margin: 3rem auto; padding: 0 1rem; display: grid; gap: 2rem; }
+.property-card {
+  display: grid; grid-template-columns: 260px 1fr; background: white;
+  border-radius: 20px; overflow: hidden; box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.property-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.property-card-img { width: 100%; height: 100%; object-fit: cover; background: #eee; }
+.property-card-body { padding: 1.5rem; display: flex; flex-direction: column; }
+.property-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
+.property-address { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+.rent { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+.rent span { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+
+/* ── Property Detail ────────────────────────────────────────────────────── */
+.detail-gallery { display: grid; grid-template-columns: 1fr; gap: 2px; background: var(--bg-secondary); }
+.detail-content { max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; display: grid; grid-template-columns: 1fr 340px; gap: 4rem; }
+.detail-section { margin-bottom: 4rem; }
+.detail-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+
+.amenity-chip {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem; border-radius: 10px; background: var(--bg-secondary);
+  font-size: 0.85rem; font-weight: 500; margin: 0 0.5rem 0.5rem 0;
+}
+.amenity-chip img { width: 14px; opacity: 0.6; }
+
+.booking-card {
+  background: white; border: 1px solid var(--border); border-radius: 22px;
+  padding: 2rem; position: sticky; top: 80px; box-shadow: var(--shadow-lg);
+}
+.book-btn {
+  width: 100%; padding: 0.85rem; background: var(--accent); color: white;
+  border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; margin-top: 1.5rem;
+}
+
+/* ── Auth Modal ─────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(8px);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: white; border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 400px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.1); border: 1px solid var(--border);
+}
+.form-input {
+  width: 100%; padding: 0.8rem 1rem; background: var(--bg-secondary); border: none;
+  border-radius: 10px; font-size: 0.9rem; margin-bottom: 0.75rem;
+}
+.form-submit {
+  width: 100%; padding: 0.85rem; background: var(--accent); color: white;
+  border: none; border-radius: 12px; font-weight: 600; margin-top: 1rem;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.footer { background: var(--bg-secondary); padding: 4rem 1.5rem; border-top: 1px solid var(--border); }
+.footer-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+.footer-desc { color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem; }
+
+@media (max-width: 768px) {
+  .detail-content { grid-template-columns: 1fr; gap: 2rem; }
+  .property-card { grid-template-columns: 1fr; }
+  .property-card-img { height: 180px; }
+}
