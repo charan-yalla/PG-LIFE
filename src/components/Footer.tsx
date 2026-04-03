@@ -24,7 +24,7 @@ export default function Footer() {
             <Mail size={18} />
           </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "3rem" }}>
           <div className="footer-links">
             <h4 style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1.25rem", color: "var(--text-muted)" }}>Cities</h4>
             <ul style={{ listStyle: "none", display: "grid", gap: "0.75rem" }}>
@@ -35,6 +35,15 @@ export default function Footer() {
             <h4 style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1.25rem", color: "var(--text-muted)" }}>Company</h4>
             <ul style={{ listStyle: "none", display: "grid", gap: "0.75rem" }}>
               {companyLinks.map(l => <li key={l.name}><Link href={l.path} style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{l.name}</Link></li>)}
+            </ul>
+          </div>
+          <div className="footer-links">
+            <h4 style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1.25rem", color: "var(--text-muted)" }}>Get Started</h4>
+            <ul style={{ listStyle: "none", display: "grid", gap: "0.75rem" }}>
+              <li><Link href="/?auth=login" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>User Login</Link></li>
+              <li><Link href="/?auth=signup" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>User Signup</Link></li>
+              <li><Link href="/?auth=login&role=owner" style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 500 }}>Owner Login</Link></li>
+              <li><Link href="/?auth=signup&role=owner" style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 500 }}>Owner Signup</Link></li>
             </ul>
           </div>
         </div>

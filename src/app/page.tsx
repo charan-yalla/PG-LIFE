@@ -22,11 +22,20 @@ export default function HomePage() {
           <h1 style={{ fontSize: "5rem", letterSpacing: "-0.05em", fontWeight: 800 }}>Happiness per<br />Square Foot.</h1>
           <p style={{ fontSize: "1.25rem", marginTop: "1rem", color: "var(--text-muted)", maxWidth: 600 }}>The most trusted platform for high-end, verified paying guest accommodations across India.</p>
           
-          <form className="search-bar" action="/property-list" method="GET" style={{ marginTop: "3rem" }}>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "3rem" }}>
+            <Link href="/property-list?city=Delhi" className="book-btn" style={{ background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
+               Find a PG →
+            </Link>
+            <Link href="/?auth=signup&role=owner" className="book-btn" style={{ background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
+               List your Property
+            </Link>
+          </div>
+
+          <form className="search-bar" action="/property-list" method="GET" style={{ marginTop: "2rem" }}>
             <input 
               type="text" 
               name="city" 
-              placeholder="Enter your city (e.g. Delhi, Mumbai...)" 
+              placeholder="Search by city (e.g. Mumbai...)" 
               autoComplete="off" 
               required
             />

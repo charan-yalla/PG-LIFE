@@ -1,7 +1,7 @@
 "use client";
-import { useState, ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, LogIn, LogOut, X, Phone, Mail, School } from "lucide-react";
 import type { SessionUser } from "@/lib/session";
@@ -15,6 +15,14 @@ export default function Navbar({ user: initialUser }: Props) {
   const [form, setForm] = useState({ email: "", password: "", full_name: "", phone: "", gender: "male", college_name: "", role: "user" });
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const auth = searchParams.get("auth");
+    const role = searchParams.get("role") as "user" | "owner";
+    if (auth === "login") setModal("login");
+    if (auth === "signup") { setModal("signup"); if (role) setForm(f => ({ ...f, role })); }
+  }, [searchParams]);
 
   const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => 
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
@@ -147,7 +155,7 @@ export default function Navbar({ user: initialUser }: Props) {
                         className={`filter-btn ${form.role === "user" ? "active" : ""}`}
                         style={{ flex: 1 }}
                       >
-                        I am a Student / Professional
+                        I am a User
                       </button>
                       <button 
                         type="button" 
