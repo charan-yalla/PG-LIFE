@@ -16,6 +16,7 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
   const [isInterested, setIsInterested] = useState(initInterested);
   const [count, setCount] = useState(initCount);
   const [booked, setBooked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const toggle = async () => {
     if (!isLoggedIn) return alert("Please login to mark interest.");
@@ -28,9 +29,22 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
     if (data.success) { setIsInterested(data.is_interested); setCount(data.count); }
   };
 
-  const book = () => {
-    setBooked(true);
-    setTimeout(() => setBooked(false), 3000);
+  const book = async () => {
+    if (!isLoggedIn) return alert("Please login to book a viewing.");
+    try {
+      setBooked(true);
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ property_id: propertyId }),
+      });
+      const data = await res.json();
+      if (data.success) setShowModal(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTimeout(() => setBooked(false), 2000);
+    }
   };
 
   const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
@@ -66,6 +80,36 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
       <div className="interested-count" style={{ marginTop: "1rem", fontSize: "0.8rem", textAlign: "center", opacity: 0.7 }}>
         {count} residents showed interest
       </div>
+
+      <AnimatePresence>
+        {showModal && (
+          <div className="modal-overlay" style={{ display: "flex", zIndex: 1000 }}>
+            <motion.div 
+              className="modal"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              style={{ textAlign: "center", padding: "3rem 2rem" }}
+            >
+              <div style={{ background: "var(--accent-dim)", color: "var(--accent)", width: 64, height: 64, borderRadius: 99, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem" }}>
+                <Check size={32} />
+              </div>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "0.5rem" }}>Thank You!</h2>
+              <p style={{ color: "var(--text-muted)", marginBottom: "2rem", lineHeight: 1.5 }}>
+                Your request has been received.<br />
+                Our team will contact you shortly to confirm the viewing.
+              </p>
+              <button 
+                onClick={() => setShowModal(false)}
+                className="book-btn"
+                style={{ background: "var(--text)", color: "white", width: "100%", borderRadius: 12, height: 50 }}
+              >
+                Done
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

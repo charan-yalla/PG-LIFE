@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 export type SessionUser = {
   id: number; email: string; full_name: string;
   phone: string; gender: string; college_name: string;
+  role: "user" | "owner";
 };
 
 export type AppSession = { user?: SessionUser };

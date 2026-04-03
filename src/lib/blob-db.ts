@@ -1,4 +1,4 @@
-import { put } from "@vercel/blob";
+import { put, list } from "@vercel/blob";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -8,13 +8,20 @@ const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 async function readJson<T>(key: string, fallback: T): Promise<T> {
   try {
     if (USE_BLOB) {
-      const res = await fetch(`https://blob.vercel-storage.com/${key}`, { cache: "no-store" });
+      const { blobs } = await list({ prefix: key });
+      const blob = blobs.find(b => b.pathname === key);
+      if (!blob) return fallback;
+
+      const res = await fetch(blob.url, { cache: "no-store" });
       if (!res.ok) return fallback;
       return res.json();
     }
     const raw = await fs.readFile(path.join(LOCAL_DIR, key), "utf-8");
     return JSON.parse(raw);
-  } catch { return fallback; }
+  } catch (err) {
+    console.error(`Read error for ${key}:`, err);
+    return fallback;
+  }
 }
 
 async function writeJson<T>(key: string, data: T): Promise<void> {
@@ -31,6 +38,7 @@ async function writeJson<T>(key: string, data: T): Promise<void> {
 export type DbUser = {
   id: number; email: string; password_hash: string;
   full_name: string; phone: string; gender: string; college_name: string;
+  role: "user" | "owner";
 };
 
 const USERS_KEY = "db/users.json";
@@ -73,4 +81,45 @@ export async function toggleInterested(user_id: number, property_id: number): Pr
   }
   await writeJson(INT_KEY, [...all, { user_id, property_id }]);
   return true;
+}
+// ── Properties ────────────────────────────────────────────────────────────
+export type DbProperty = {
+  id: number; city_id: number; name: string; address: string;
+  description: string; gender: "male" | "female" | "unisex";
+  rent: number; rating_clean: number; rating_food: number; rating_safety: number;
+  images: string[]; is_verified?: boolean; is_popular?: boolean;
+  owner_id: number;
+};
+const PROPS_KEY = "db/properties.json";
+
+export async function getDbProperties(): Promise<DbProperty[]> {
+  return readJson<DbProperty[]>(PROPS_KEY, []);
+}
+export async function createProperty(data: Omit<DbProperty, "id">): Promise<DbProperty> {
+  const all = await getDbProperties();
+  const next: DbProperty = { id: Date.now(), ...data };
+  await writeJson(PROPS_KEY, [...all, next]);
+  return next;
+}
+
+// ── Bookings ──────────────────────────────────────────────────────────────
+export type DbBooking = {
+  id: number; user_id: number; property_id: number;
+  timestamp: string; status: "pending" | "confirmed" | "rejected";
+};
+const BOOKINGS_KEY = "db/bookings.json";
+
+export async function getBookings(): Promise<DbBooking[]> {
+  return readJson<DbBooking[]>(BOOKINGS_KEY, []);
+}
+export async function createBooking(user_id: number, property_id: number): Promise<DbBooking> {
+  const all = await getBookings();
+  const next: DbBooking = { id: Date.now(), user_id, property_id, timestamp: new Date().toISOString(), status: "pending" };
+  await writeJson(BOOKINGS_KEY, [...all, next]);
+  return next;
+}
+export async function getBookingsByOwner(owner_id: number) {
+  const p = await getDbProperties();
+  const myProps = p.filter(x => x.owner_id === owner_id).map(x => x.id);
+  return (await getBookings()).filter(b => myProps.includes(b.property_id));
 }
