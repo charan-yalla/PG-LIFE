@@ -1,60 +1,46 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, MapPin, CheckCircle, ShieldCheck, Heart } from "lucide-react";
+import { CheckCircle, ShieldCheck, Heart } from "lucide-react";
 import { cities, properties } from "@/lib/seed";
 import PropertyCard from "@/components/PropertyCard";
 
 export default function HomePage() {
   const featured = properties.filter(p => p.is_popular).slice(0, 3);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then(r => r.json())
+      .then(d => setIsLoggedIn(!!d.user))
+      .catch(() => {});
+  }, []);
 
   return (
     <>
-      <section className="hero">
+      <section className="hero" style={{ textAlign: "center" }}>
         <motion.div
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.8 }}
         >
-          <div style={{ display: "inline-block", padding: "0.25rem 0.75rem", background: "#0071e310", color: "#0071e3", borderRadius: 99, fontSize: "0.7rem", fontWeight: 700, marginBottom: "1.5rem" }}>
-            NATIONWIDE PG NETWORK
-          </div>
-          <h1 style={{ fontSize: "5rem", letterSpacing: "-0.05em", fontWeight: 800 }}>Happiness per<br />Square Foot.</h1>
-          <p style={{ fontSize: "1.25rem", marginTop: "1rem", color: "var(--text-muted)", maxWidth: 600 }}>The most trusted platform for high-end, verified paying guest accommodations across India.</p>
+          <h1 style={{ fontSize: "5rem", letterSpacing: "-0.05em", fontWeight: 800, marginBottom: "0.5rem" }}>PG Life</h1>
+          <p style={{ fontSize: "1.5rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "1rem" }}>Happiness per Square Foot.</p>
+          <p style={{ fontSize: "1rem", color: "var(--text-muted)", maxWidth: 500, marginInline: "auto" }}>The most trusted platform for high-end, verified paying guest accommodations across India.</p>
           
-          <div style={{ display: "flex", gap: "1rem", marginTop: "3rem" }}>
-            <Link href="/property-list" className="book-btn" style={{ background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
-               Find a PG →
-            </Link>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "2.5rem", justifyContent: "center" }}>
             <Link href="/add-property" className="book-btn" style={{ background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
                List your Property
             </Link>
           </div>
-
-          <form className="search-bar" action="/property-list" method="GET" style={{ marginTop: "2rem" }}>
-            <input 
-              type="text" 
-              name="city" 
-              placeholder="Search by city (e.g. Mumbai...)" 
-              autoComplete="off" 
-              required
-            />
-            <button type="submit">
-              <Search size={18} />
-            </button>
-          </form>
         </motion.div>
       </section>
 
       <section className="section" style={{ background: "var(--bg-secondary)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem" }}>
-          <div>
-            <h2 className="section-title" style={{ marginBottom: "0.5rem" }}>Explore India</h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>Handpicked locations in the country&apos;s most vibrant hubs.</p>
-          </div>
-          <Link href="/property-list?city=Delhi" style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 600 }}>
-            View All Cities →
-          </Link>
+        <div style={{ marginBottom: "3rem" }}>
+          <h2 className="section-title" style={{ marginBottom: "0.5rem" }}>Explore India</h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>Handpicked locations in the country&apos;s most vibrant hubs.</p>
         </div>
 
         <div className="cities-grid">
@@ -95,14 +81,17 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <PropertyCard property={p} interestedCount={12 + i} isInterested={false} isLoggedIn={false} />
+              <PropertyCard property={p} interestedCount={12 + i} isInterested={false} isLoggedIn={isLoggedIn} />
             </motion.div>
           ))}
         </div>
         
-        <div style={{ textAlign: "center", marginTop: "4rem" }}>
+        <div style={{ textAlign: "center", marginTop: "4rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
            <Link href="/property-list" className="book-btn" style={{ display: "inline-block", background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
               Browse All 32+ Properties
+           </Link>
+           <Link href="/add-property" className="book-btn" style={{ display: "inline-block", background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
+              List your Property →
            </Link>
         </div>
       </section>

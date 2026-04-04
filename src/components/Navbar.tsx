@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, ReactNode } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, LogIn, LogOut, X, Phone, Mail, School } from "lucide-react";
+import { User, LogIn, LogOut, X, Phone, Mail, School, Home } from "lucide-react";
 import type { SessionUser } from "@/lib/session";
 
 type Props = { user: SessionUser | null };
@@ -33,15 +33,9 @@ export default function Navbar({ user: initialUser }: Props) {
       const res = await fetch("/api/auth/login", { method: "POST", body: JSON.stringify(form) });
       const data = await res.json();
       if (data.success) { setUser(data.user); setModal(null); router.refresh(); }
-      else {
-        // Fallback: Fake successful login for demo purposes
-        setUser({ ...form, id: Date.now() } as any);
-        setModal(null);
-      }
+      else setError(data.message || "Login failed. Please check your credentials.");
     } catch {
-      // Fallback: Fake successful login for demo purposes
-      setUser({ ...form, id: Date.now() } as any);
-      setModal(null);
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -72,7 +66,9 @@ export default function Navbar({ user: initialUser }: Props) {
   return (
     <>
       <nav className="navbar">
-        <Link href="/" className="nav-brand">PG Life</Link>
+        <Link href="/" className="nav-brand">
+          <Home size={24} />
+        </Link>
         <div className="nav-links">
           {user ? (
             <>
@@ -142,29 +138,8 @@ export default function Navbar({ user: initialUser }: Props) {
                   </>
                 )}
 
-                {modal === "signup" && (
-                  <div className="form-group" style={{ marginBottom: "1rem" }}>
-                    <label style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-muted)", display: "block", marginBottom: "0.5rem" }}>SELECT YOUR ROLE</label>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      <button 
-                        type="button" 
-                        onClick={() => setForm(f => ({ ...f, role: "user" }))}
-                        className={`filter-btn ${form.role === "user" ? "active" : ""}`}
-                        style={{ flex: 1 }}
-                      >
-                        I am a User
-                      </button>
-                      <button 
-                        type="button" 
-                        onClick={() => setForm(f => ({ ...f, role: "owner" }))}
-                        className={`filter-btn ${form.role === "owner" ? "active" : ""}`}
-                        style={{ flex: 1 }}
-                      >
-                        I am a PG Owner
-                      </button>
-                    </div>
-                  </div>
-                )}
+
+
 
                 <button className="form-submit" disabled={loading}>
                   {loading ? "Processing..." : modal === "login" ? "Sign In" : "Create Account"}

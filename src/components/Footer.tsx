@@ -40,10 +40,9 @@ export default function Footer() {
           <div className="footer-links">
             <h4 style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1.25rem", color: "var(--text-muted)" }}>Get Started</h4>
             <ul style={{ listStyle: "none", display: "grid", gap: "0.75rem" }}>
-              <li><Link href="/?auth=login" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>User Login</Link></li>
-              <li><Link href="/?auth=signup" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>User Signup</Link></li>
-              <li><Link href="/?auth=login&role=owner" style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 500 }}>Owner Login</Link></li>
-              <li><Link href="/?auth=signup&role=owner" style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 500 }}>Owner Signup</Link></li>
+              <li><Link href="/?auth=login" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Login</Link></li>
+              <li><Link href="/?auth=signup" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Sign Up</Link></li>
+              <li><Link href="/add-property" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>List your Property</Link></li>
             </ul>
           </div>
         </div>

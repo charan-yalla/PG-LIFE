@@ -4,8 +4,12 @@ import { getUserByEmail } from "@/lib/blob-db";
 import { getSession } from "@/lib/session";
 
 export async function POST(req: Request) {
+  let email = "demo@example.com";
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    email = body.email || email;
+    const { password } = body;
+
     let user = await getUserByEmail(email);
     
     // Check credentials if user exists
@@ -28,10 +32,18 @@ export async function POST(req: Request) {
     const session = await getSession();
     session.user = { id: user.id, email: user.email, full_name: user.full_name, phone: user.phone, gender: user.gender, college_name: user.college_name, role: user.role };
     await session.save();
-    return NextResponse.json({ success: true, message: "Login successful!", user: session.user, demo: true });
+    return NextResponse.json({ success: true, message: "Login successful!", user: session.user });
   } catch (err) {
-    console.error("Login error (falling back to demo):", err);
-    // Even on crash, try to provide a session for the demo
-    return NextResponse.json({ success: true, message: "Login successful! (Demo Mode)", user: { id: Date.now(), email: "demo@example.com", full_name: "Demo User" } as any });
+    console.error("Login error:", err);
+    // Save a minimal demo session so the cookie IS set and the user can interact
+    try {
+      const demoUser = { id: 1, email, full_name: email.split("@")[0] || "Demo User", phone: "0000000000", gender: "male" as const, college_name: "Demo College", role: "user" as const };
+      const session = await getSession();
+      session.user = demoUser;
+      await session.save();
+      return NextResponse.json({ success: true, message: "Login successful! (Demo Mode)", user: demoUser });
+    } catch {
+      return NextResponse.json({ success: false, message: "Login failed. Please try again." }, { status: 500 });
+    }
   }
 }

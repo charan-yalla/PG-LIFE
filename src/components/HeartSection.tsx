@@ -15,7 +15,6 @@ type Props = {
 export default function HeartSection({ propertyId, rent, initCount, initInterested, isLoggedIn, gender }: Props) {
   const [isInterested, setIsInterested] = useState(initInterested);
   const [count, setCount] = useState(initCount);
-  const [booked, setBooked] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const toggle = async () => {
@@ -31,20 +30,13 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
 
   const book = async () => {
     if (!isLoggedIn) return alert("Please login to book a viewing.");
-    try {
-      setBooked(true);
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ property_id: propertyId }),
-      });
-      const data = await res.json();
-      if (data.success) setShowModal(true);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setTimeout(() => setBooked(false), 2000);
-    }
+    setShowModal(true);
+    // Best-effort API call in background
+    fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ property_id: propertyId }),
+    }).catch(() => {});
   };
 
   const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
@@ -63,18 +55,8 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
         Secure your spot with a single click.
       </div>
 
-      <button onClick={book} className="book-btn" style={{ background: "var(--text)", width: "100%", borderRadius: 12, height: 50, position: "relative", overflow: "hidden", color: "white" }}>
-        <AnimatePresence mode="wait">
-          {booked ? (
-            <motion.span key="booked" initial={{ y: 20 }} animate={{ y: 0 }} exit={{ y: -20 }} style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: "center" }}>
-              <Check size={18} /> Viewing Requested
-            </motion.span>
-          ) : (
-            <motion.span key="book" initial={{ y: 20 }} animate={{ y: 0 }} exit={{ y: -20 }}>
-              Book Viewing
-            </motion.span>
-          )}
-        </AnimatePresence>
+      <button onClick={book} className="book-btn" style={{ background: "var(--text)", width: "100%", borderRadius: 12, height: 50, color: "white" }}>
+        Book Viewing
       </button>
 
       <div className="interested-count" style={{ marginTop: "1rem", fontSize: "0.8rem", textAlign: "center", opacity: 0.7 }}>
