@@ -8,6 +8,7 @@ export default function AddPropertyPage() {
   const [form, setForm] = useState({
     name: "", address: "", city_id: 1, description: "",
     gender: "unisex", rent: 5000,
+    amenities: [] as number[],
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -85,10 +86,35 @@ export default function AddPropertyPage() {
                 className="form-input" 
                 name="description" 
                 style={{ paddingLeft: "2.5rem", minHeight: 100, paddingTop: 12 }} 
-                placeholder="Tell us about the amenities, vibes, and surroundings..." 
+                placeholder="Tell us about the vibes and surroundings..." 
                 required 
                 onChange={handle} 
               />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label style={{ fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem", display: "block" }}>AMENITIES</label>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+              {[
+                { id: 1, name: "Wifi" }, { id: 9, name: "Air Conditioner" },
+                { id: 4, name: "TV" }, { id: 10, name: "Washing Machine" },
+                { id: 6, name: "Parking" }, { id: 2, name: "Power Backup" },
+                { id: 7, name: "Water Purifier" }, { id: 13, name: "Geyser" },
+              ].map(a => (
+                <label key={a.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.85rem", cursor: "pointer" }}>
+                  <input 
+                    type="checkbox" 
+                    onChange={(e) => {
+                       const checked = e.target.checked;
+                       setForm(f => ({
+                         ...f, 
+                         amenities: checked ? [...f.amenities, a.id] : f.amenities.filter(id => id !== a.id)
+                       }));
+                    }}
+                  /> {a.name}
+                </label>
+              ))}
             </div>
           </div>
 

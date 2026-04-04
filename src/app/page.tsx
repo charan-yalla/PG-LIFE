@@ -23,10 +23,10 @@ export default function HomePage() {
           <p style={{ fontSize: "1.25rem", marginTop: "1rem", color: "var(--text-muted)", maxWidth: 600 }}>The most trusted platform for high-end, verified paying guest accommodations across India.</p>
           
           <div style={{ display: "flex", gap: "1rem", marginTop: "3rem" }}>
-            <Link href="/property-list?city=Delhi" className="book-btn" style={{ background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Link href="/property-list" className="book-btn" style={{ background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
                Find a PG →
             </Link>
-            <Link href="/?auth=signup&role=owner" className="book-btn" style={{ background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Link href="/add-property" className="book-btn" style={{ background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
                List your Property
             </Link>
           </div>
@@ -101,7 +101,7 @@ export default function HomePage() {
         </div>
         
         <div style={{ textAlign: "center", marginTop: "4rem" }}>
-           <Link href="/property-list?city=Delhi" className="book-btn" style={{ display: "inline-block", background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
+           <Link href="/property-list" className="book-btn" style={{ display: "inline-block", background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
               Browse All 32+ Properties
            </Link>
         </div>

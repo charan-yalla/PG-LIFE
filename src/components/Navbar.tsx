@@ -12,7 +12,7 @@ export default function Navbar({ user: initialUser }: Props) {
   const [user, setUser] = useState(initialUser);
   const [modal, setModal] = useState<"login" | "signup" | null>(null);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "", full_name: "", phone: "", gender: "male", college_name: "", role: "user" });
+  const [form, setForm] = useState({ email: "", password: "", full_name: "", phone: "", gender: "male", role: "user" });
   const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -138,9 +138,6 @@ export default function Navbar({ user: initialUser }: Props) {
                       <select className="form-input" name="gender" onChange={handle}>
                         <option value="male">Male</option><option value="female">Female</option>
                       </select>
-                    </div>
-                    <div className="form-group">
-                      <input className="form-input" name="college_name" placeholder="College Name" required onChange={handle} />
                     </div>
                   </>
                 )}
