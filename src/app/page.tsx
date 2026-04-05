@@ -28,12 +28,6 @@ export default function HomePage() {
           <h1 style={{ fontSize: "5rem", letterSpacing: "-0.05em", fontWeight: 800, marginBottom: "0.5rem" }}>PG Life</h1>
           <p style={{ fontSize: "1.5rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "1rem" }}>Happiness per Square Foot.</p>
           <p style={{ fontSize: "1rem", color: "var(--text-muted)", maxWidth: 500, marginInline: "auto" }}>The most trusted platform for high-end, verified paying guest accommodations across India.</p>
-          
-          <div style={{ display: "flex", gap: "1rem", marginTop: "2.5rem", justifyContent: "center" }}>
-            <Link href="/add-property" className="book-btn" style={{ background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8 }}>
-               List your Property
-            </Link>
-          </div>
         </motion.div>
       </section>
 
@@ -87,9 +81,6 @@ export default function HomePage() {
         </div>
         
         <div style={{ textAlign: "center", marginTop: "4rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-           <Link href="/property-list" className="book-btn" style={{ display: "inline-block", background: "var(--text)", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
-              Browse All 32+ Properties
-           </Link>
            <Link href="/add-property" className="book-btn" style={{ display: "inline-block", background: "#0071e3", color: "white", padding: "1rem 2rem", borderRadius: 12, fontWeight: 700 }}>
               List your Property →
            </Link>

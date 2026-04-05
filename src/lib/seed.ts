@@ -112,10 +112,12 @@ export function getPropertyAmenities(propertyId: number): Amenity[] {
 }
 
 export function getPropertiesByCity(cityName: string): Property[] {
+  if (!cityName) return properties;
   const city = cities.find(c => c.name.toLowerCase() === cityName.toLowerCase());
   if (!city) return [];
   return properties.filter(p => p.city_id === city.id);
 }
+
 
 export function getPropertyById(id: number) { return properties.find(p => p.id === id); }
 export function getCityById(id: number) { return cities.find(c => c.id === id); }

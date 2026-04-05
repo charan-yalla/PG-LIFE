@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Building, MapPin, IndianRupee, Users, FileText } from "lucide-react";
+import { Building, MapPin, IndianRupee, Users, FileText, CheckCircle, AlertCircle } from "lucide-react";
 
 export default function AddPropertyPage() {
   const [form, setForm] = useState({
@@ -11,6 +11,8 @@ export default function AddPropertyPage() {
     amenities: [] as number[],
   });
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handle = (e: any) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,13 +20,22 @@ export default function AddPropertyPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
     try {
       const res = await fetch("/api/properties", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, rent: Number(form.rent), city_id: Number(form.city_id), images: ["/images/pg_unisex.png"], rating_clean: 4.5, rating_food: 4.0, rating_safety: 4.5 }),
       });
-      if (res.ok) router.push("/dashboard");
+      
+      const data = await res.json();
+      if (res.ok) {
+        setShowSuccess(true);
+      } else {
+        setError(data.message || "Failed to list property. Ensure you are logged in as an owner.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -118,11 +129,46 @@ export default function AddPropertyPage() {
             </div>
           </div>
 
+          {error && (
+            <div style={{ color: "#ff3b30", fontSize: "0.85rem", marginTop: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
+              <AlertCircle size={14} /> {error}
+            </div>
+          )}
+
           <button className="form-submit" disabled={loading} style={{ marginTop: "1rem" }}>
             {loading ? "Listing Property..." : "Submit Listing"}
           </button>
         </form>
+
+        {showSuccess && (
+          <div className="modal-overlay">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="modal"
+              style={{ textAlign: "center" }}
+            >
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+                <div style={{ width: 64, height: 64, background: "#e8f5e9", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#34c759", border: "2px solid #34c759" }}>
+                   {/* @ts-ignore - style prop fix */}
+                   <CheckCircle size={40} style={{ margin: "auto" }} />
+                </div>
+              </div>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "1rem" }}>Listing Submitted!</h2>
+              <p style={{ color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "2rem" }}>
+                Thank You, for listing your PG on our website we&apos;ll cross check once and contact you shortly
+              </p>
+              <button 
+                onClick={() => router.push("/dashboard")}
+                className="form-submit"
+              >
+                Go to Dashboard
+              </button>
+            </motion.div>
+          </div>
+        )}
       </motion.div>
     </div>
   );
 }
+
