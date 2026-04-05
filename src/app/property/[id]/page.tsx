@@ -15,9 +15,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
   const city = getCityById(property.city_id);
   const amenitiesList = getPropertyAmenities(property.id);
   const propertyTestimonials = testimonials.filter(t => t.property_id === property.id);
-  const interestedList = await getInterestedByProperty(property.id);
   const session = await getSession();
-  const isInterested = !!session.user && interestedList.some(i => i.user_id === session.user!.id);
   const totalRating = calcRating(property);
 
   const amenityGroups = ["Building", "Common Area", "Bedroom", "Washroom"];
@@ -113,8 +111,6 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               propertyId={property.id} 
               rent={property.rent}
               gender={property.gender}
-              initCount={interestedList.length} 
-              initInterested={isInterested} 
               isLoggedIn={!!session.user} 
             />
             <p style={{ fontSize: "0.7rem", textAlign: "center", marginTop: "1rem", color: "var(--text-muted)" }}>
@@ -124,5 +120,6 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
         </aside>
       </div>
     </div>
+
   );
 }

@@ -1,36 +1,23 @@
 "use client";
 import { useState } from "react";
-import { Heart, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Props = {
   propertyId: number;
   rent: number;
-  initCount: number;
-  initInterested: boolean;
   isLoggedIn: boolean;
   gender: string;
 };
 
-export default function HeartSection({ propertyId, rent, initCount, initInterested, isLoggedIn, gender }: Props) {
-  const [isInterested, setIsInterested] = useState(initInterested);
-  const [count, setCount] = useState(initCount);
+export default function HeartSection({ propertyId, rent, isLoggedIn, gender }: Props) {
+  const [isBooked, setIsBooked] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  const toggle = async () => {
-    if (!isLoggedIn) return alert("Please login to mark interest.");
-    const res = await fetch("/api/interested", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ property_id: propertyId }),
-    });
-    const data = await res.json();
-    if (data.success) { setIsInterested(data.is_interested); setCount(data.count); }
-  };
 
   const book = async () => {
     if (!isLoggedIn) return alert("Please login to book a viewing.");
     setShowModal(true);
+    setIsBooked(true);
     // Best-effort API call in background
     fetch("/api/bookings", {
       method: "POST",
@@ -45,9 +32,6 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
     <div style={{ width: "100%" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
         <div className="rent" style={{ fontSize: "1.75rem" }}>{formatter.format(rent)}<span>/month</span></div>
-        <button className={`heart-btn ${isInterested ? "active" : ""}`} onClick={toggle} style={{ background: "none", border: "none" }}>
-          <Heart size={24} fill={isInterested ? "currentColor" : "none"} />
-        </button>
       </div>
 
       <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>
@@ -55,13 +39,21 @@ export default function HeartSection({ propertyId, rent, initCount, initInterest
         Secure your spot with a single click.
       </div>
 
-      <button onClick={book} className="book-btn" style={{ background: "var(--text)", width: "100%", borderRadius: 12, height: 50, color: "white" }}>
-        Book Viewing
+      <button 
+        onClick={book} 
+        disabled={isBooked}
+        className="book-btn" 
+        style={{ 
+          background: isBooked ? "#34c759" : "var(--text)", 
+          width: "100%", 
+          borderRadius: 12, 
+          height: 50, 
+          color: "white",
+          cursor: isBooked ? "default" : "pointer"
+        }}
+      >
+        {isBooked ? "Booked" : "Book Viewing"}
       </button>
-
-      <div className="interested-count" style={{ marginTop: "1rem", fontSize: "0.8rem", textAlign: "center", opacity: 0.7 }}>
-        {count} residents showed interest
-      </div>
 
       <AnimatePresence>
         {showModal && (
